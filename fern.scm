@@ -14,15 +14,17 @@
 (require (lib "graphics.ss" "graphics"))
 
 ; Colours to represent each function with.
-(define *COLOURS* '("green" "green" "green" "green"))
+;(define *COLOURS* '("green" "green" "green" "green"))
 
-(define *ITERATIONS* 100)
-(define *WIDTH* 350)
-(define *HEIGHT* 350)
+(define *ITERATIONS* 100000)
+(define *WIDTH* 400)
+(define *HEIGHT* 400)
 
 ; Valid ranges for the plottable points.
-(define *RANGE_X* '(-2.1818 2.6556))
-(define *RANGE_Y* '(0 9.95851))
+;(define *RANGE_X* '(-2.1818 2.6556))
+;(define *RANGE_Y* '(0 9.95851))
+(define *RANGE_X* '(-4 4))
+(define *RANGE_Y* '(-0.1 10.1))
 
 ; Matrix constants for each function.
 ; Formula:
@@ -70,24 +72,34 @@
 (define (find-y x y input)
   (find-point x y #\c #\d #\f input))
 
+(define range-width (- (cadr *RANGE_X*) (car *RANGE_X*)))
+(define range-height (- (cadr *RANGE_Y*) (car *RANGE_Y*)))
+
 ; Calculates a pixel position and draws a point on it.
-(define (draw-pixel x y)
-  (let ((pixel-x (* (/ (- x (car *RANGE_X*)) (- (cadr *RANGE_X*) (car *RANGE_X*))) *WIDTH*))
-        (pixel-y (- (- *HEIGHT* 1) (* (/ (- y (car *RANGE_Y*)) (- (cadr *RANGE_Y*) (car *RANGE_Y*))) *HEIGHT*))))
-    (display pixel-x)
-    (display ", ")
-    (display pixel-y)
-    (display #\newline)))
+; We are only interested in this functions side-effects.
+(define (draw-pixel vp x y)
+  (let* ((pixel-x (* (/ (- x (car *RANGE_X*))
+                        range-width)
+                     *WIDTH*))
+         (pixel-y (- (- *HEIGHT* 1)
+                     (* (/ (- y (car *RANGE_Y*)) range-height)
+                        *HEIGHT*)))
+         (posn (make-posn (round pixel-x) (round pixel-y))))
+    (if (and (>= pixel-x 0) (>= pixel-y 0)
+             (< pixel-x *WIDTH*) (< pixel-y *HEIGHT*))
+      ((draw-pixel vp) posn "green"))))
 
 ; Plots the next point on the canvas using x,y as the
 ; seed and i as the iteration.
-(define (plot-points i x y)
+(define (plot-points vp i x y)
   (let* ((input (choose-function 0 (random)))
          (next-x (find-x x y input))
          (next-y (find-y x y input)))
-    (draw-pixel next-x next-y)
+    (draw-pixel vp next-x next-y)
     (if (< i *ITERATIONS*)
-      (plot-points (+ i 1) next-x next-y))))
+      (plot-points vp (+ i 1) next-x next-y))))
 
 (define (draw-fern)
-  (plot-points 0 1 1))
+  (open-graphics)
+  (let ((vp (open-viewport "Fractals - Bernley's Fern" *WIDTH* *HEIGHT*)))
+    (plot-points vp 0 1 1)))
