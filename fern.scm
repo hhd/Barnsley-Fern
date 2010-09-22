@@ -1,6 +1,6 @@
 ;;; Fractals
 ;;; Barnsley's Fern
-;;; Andrew Buntine, 2010
+;;; Andrew Buntine, 2010 (http://www.andrewbuntine.com)
 ;;;
 ;;; The Barnsley Fern is a fractal named after the British mathematician
 ;;; Michael Barnsley. The fern is a basic example of a mathematically
@@ -16,7 +16,7 @@
 
 (require (lib "graphics.ss" "graphics"))
 
-(define *ITERATIONS* 150000)
+(define *ITERATIONS* 700000)
 (define *WIDTH* 400)
 (define *HEIGHT* 400)
 
@@ -47,8 +47,8 @@
     (vector-ref input
                 (cadr (assoc chr ref)))))
 
-; Randomly selects the correct function input 
-; with non-uniform probability (given by p in the matrix).
+; Randomly selects the function input with
+; non-uniform probability (given by p in the matrix).
 (define (choose-function row rnd)
   (let* ((input (list-ref matrix row))
          (remaining (- rnd (mval #\p input))))
@@ -58,6 +58,7 @@
 
 ; Finds a point to draw the next pixel given the correct
 ; matrix value references.
+; In common notation: (x * va) + (y * vb) + vc
 (define (find-point x y va vb vc input)
   (+ (+ (* x (mval va input))
         (* y (mval vb input)))
@@ -77,7 +78,7 @@
 
 ; Calculates a pixel position and draws a point on it.
 ; We are only interested in this functions side-effects.
-; NOTE: I got some hepl from http://vb-helper.com for
+; NOTE: I got some help from http://vb-helper.com for
 ;       the pixel-x/pixel-y formulas.
 (define (paint-pixel vp x y)
   (let* ((pixel-x (* (/ (- x range-min-w)
