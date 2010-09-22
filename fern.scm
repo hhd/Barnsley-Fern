@@ -28,3 +28,43 @@
     #(0.85 0.04 -0.04 0.85 0 1.6 0.85)
     #(0.2 -0.26 0.23 0.22 0 1.6 0.07)
     #(-0.15 0.28 0.26 0.24 0 0.44 0.07)))
+
+; Returns a given value from a row of the matrix
+; as fed in through 'input'.
+(define (mval chr input)
+  (let (ref '(("a" 0) ("b" 1) ("c" 1)
+              ("d" 1) ("e" 1) ("f" 1)
+              ("p" 1)))
+    (vector-ref input (assoc ref chr))A))
+
+; Randomly selects the correct function input 
+; with non-uniform probability (given by p in the matrix).
+(define (choose-function row rnd)
+  (let* ((input (list-ref matrix row))
+         (remaining (- (mval "p" input) rnd)))
+    (if (<= remaining 0)
+      input
+      (choose-function (+ 1 row) remaining))))
+
+(define (next-x x y input)
+  (+ (* (+ (* x
+           (mval("a" input))) y)
+        (mval"b" input))
+     (mval"e" input)))
+
+(define (next-y x y input)
+  (+ (* (+ (* x
+           (mval("c" input))) y)
+        (mval"d" input))
+     (mval"f" input)))
+
+; Draws the next point on the canvas using x,y as the
+; seed and i as the iteration.
+(define (draw-point i x y)
+  (let* ((input (choose-function 0 (random)))
+         (next-x (find-x x y input))
+         (next-y (find-y x y input)))
+    (display next-x)
+    (display next-y)
+    (if (< i 100)
+      (draw-point (+ i 1) next-x next-y))))
