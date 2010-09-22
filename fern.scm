@@ -16,9 +16,9 @@
 
 (require (lib "graphics.ss" "graphics"))
 
-(define *ITERATIONS* 700000)
-(define *WIDTH* 400)
-(define *HEIGHT* 400)
+(define *ITERATIONS* 600000)
+(define *WIDTH* 550)
+(define *HEIGHT* 550)
 
 ; Valid ranges for the plottable points.
 (define *RANGE_X* '(-2.1818 2.6556))
@@ -82,10 +82,10 @@
 ;       the pixel-x/pixel-y formulas.
 (define (paint-pixel vp x y)
   (let* ((pixel-x (* (/ (- x range-min-w)
-                        range-width)
+                        range-w)
                      *WIDTH*))
          (pixel-y (- (- *HEIGHT* 1)
-                     (* (/ (- y range-min-h) range-height)
+                     (* (/ (- y range-min-h) range-h)
                         *HEIGHT*)))
          (posn (make-posn (round pixel-x) (round pixel-y))))
     ; Draw the pixel if it's in range.
