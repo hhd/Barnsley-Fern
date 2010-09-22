@@ -54,10 +54,10 @@
 ; matrix value references.
 (define (find-point x y va vb vc input)
   (+ (* (+ (* x
-              (mval #\a input))
+              (mval va input))
            y)
-        (mval #\b input))
-     (mval #\e input)))
+        (mval vb input))
+     (mval vc input)))
 
 (define (find-x x y input)
   (find-point x y #\a #\b #\e input))
