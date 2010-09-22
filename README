@@ -1,0 +1,20 @@
+Fractals - Bernsley's Fern
+
+Andrew Buntine (on HHD downtime), 2010
+http://www.hhd.com.au
+http://www.andrewbuntine.com
+
+The Barnsley Fern is a fractal named after the British mathematician
+Michael Barnsley. The fern is a basic example of a mathematically
+generated pattern that can be reproducible at any magnification or reduction.
+
+This program will generate the fractal in a GUI window.
+
+I have written this using the Viewport graphics library available in
+PLT Scheme (or Racket these days). I recommend installing Dr. Scheme (sudo apt-get install drscheme)
+and selecting the "Pretty Big" implementation.
+
+  (load "/path/to/this/repo/fern.scm")
+  (draw-fern)
+
+Change the WIDTH, HEIGHT and ITERATIONS values to suit.
