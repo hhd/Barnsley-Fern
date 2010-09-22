@@ -19,3 +19,8 @@ and selecting the "Pretty Big" implementation.
   (draw-fern)
 
 Change the WIDTH, HEIGHT and ITERATIONS values to suit.
+
+
+TODO
+  - Add ability to generate different colours for each function (row of matrix)
+  - Add constants for generating different types of fern
