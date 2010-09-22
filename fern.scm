@@ -16,17 +16,16 @@
 
 (require (lib "graphics.ss" "graphics"))
 
-(define *ITERATIONS* 200000)
+(define *ITERATIONS* 150000)
 (define *WIDTH* 400)
 (define *HEIGHT* 400)
 
 ; Valid ranges for the plottable points.
 (define *RANGE_X* '(-2.1818 2.6556))
 (define *RANGE_Y* '(0 9.95851))
-;(define *RANGE_X* '(-4 4))
-;(define *RANGE_Y* '(-0.1 10.1))
 
-; Matrix constants for each function.
+; Matrix constants for each function as found at:
+;   http://en.wikipedia.org/wiki/Barnsley_fern.
 ; Formula:
 ;   f(x,y) = [a b][x] + [e]
 ;            [c d][y]   [f]
@@ -70,19 +69,25 @@
 (define (find-y x y input)
   (find-point x y #\c #\d #\f input))
 
-(define range-width (- (cadr *RANGE_X*) (car *RANGE_X*)))
-(define range-height (- (cadr *RANGE_Y*) (car *RANGE_Y*)))
+; Just a few abstractions to give better names.
+(define range-w (- (cadr *RANGE_X*) (car *RANGE_X*)))
+(define range-h (- (cadr *RANGE_Y*) (car *RANGE_Y*)))
+(define range-min-w (car *RANGE_X*))
+(define range-min-h (car *RANGE_Y*))
 
 ; Calculates a pixel position and draws a point on it.
 ; We are only interested in this functions side-effects.
-(define (draw-pixel vp x y)
-  (let* ((pixel-x (* (/ (- x (car *RANGE_X*))
+; NOTE: I got some hepl from http://vb-helper.com for
+;       the pixel-x/pixel-y formulas.
+(define (paint-pixel vp x y)
+  (let* ((pixel-x (* (/ (- x range-min-w)
                         range-width)
                      *WIDTH*))
          (pixel-y (- (- *HEIGHT* 1)
-                     (* (/ (- y (car *RANGE_Y*)) range-height)
+                     (* (/ (- y range-min-h) range-height)
                         *HEIGHT*)))
          (posn (make-posn (round pixel-x) (round pixel-y))))
+    ; Draw the pixel if it's in range.
     (if (and (>= pixel-x 0) (>= pixel-y 0)
              (< pixel-x *WIDTH*) (< pixel-y *HEIGHT*))
       ((draw-pixel vp) posn "green"))))
@@ -93,7 +98,7 @@
   (let* ((input (choose-function 0 (random)))
          (next-x (find-x x y input))
          (next-y (find-y x y input)))
-    (draw-pixel vp next-x next-y)
+    (paint-pixel vp next-x next-y)
     (if (< i *ITERATIONS*)
       (plot-points vp (+ i 1) next-x next-y))))
 
