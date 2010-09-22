@@ -9,22 +9,22 @@
 ;;; Hopefully I can impress my Maths tutor with this.
 ;;;
 ;;; Usage:
-;;;   (aaaaaa)
+;;;   (make-fern)
+;;;
+;;; TODO:
+;;;   - Add ability to change colours for each of the four functions.
 
 (require (lib "graphics.ss" "graphics"))
 
-; Colours to represent each function with.
-;(define *COLOURS* '("green" "green" "green" "green"))
-
-(define *ITERATIONS* 100000)
+(define *ITERATIONS* 200000)
 (define *WIDTH* 400)
 (define *HEIGHT* 400)
 
 ; Valid ranges for the plottable points.
-;(define *RANGE_X* '(-2.1818 2.6556))
-;(define *RANGE_Y* '(0 9.95851))
-(define *RANGE_X* '(-4 4))
-(define *RANGE_Y* '(-0.1 10.1))
+(define *RANGE_X* '(-2.1818 2.6556))
+(define *RANGE_Y* '(0 9.95851))
+;(define *RANGE_X* '(-4 4))
+;(define *RANGE_Y* '(-0.1 10.1))
 
 ; Matrix constants for each function.
 ; Formula:
@@ -36,8 +36,8 @@
 (define matrix
   '(#(0 0 0 0.16 0 0 0.01)
     #(0.85 0.04 -0.04 0.85 0 1.6 0.85)
-    #(0.2 -0.26 0.23 0.22 0 1.6 0.07)
-    #(-0.15 0.28 0.26 0.24 0 0.44 0.07)))
+    #(0.2 -0.26 0.23 0.22 0 1.6 0.08)
+    #(-0.15 0.28 0.26 0.24 0 0.44 0.06)))
 
 ; Returns a given value from a row of the matrix
 ; as fed in through 'input'.
@@ -60,10 +60,8 @@
 ; Finds a point to draw the next pixel given the correct
 ; matrix value references.
 (define (find-point x y va vb vc input)
-  (+ (* (+ (* x
-              (mval va input))
-           y)
-        (mval vb input))
+  (+ (+ (* x (mval va input))
+        (* y (mval vb input)))
      (mval vc input)))
 
 (define (find-x x y input)
@@ -99,6 +97,7 @@
     (if (< i *ITERATIONS*)
       (plot-points vp (+ i 1) next-x next-y))))
 
+; Initialising function. This is the one you should invoke!
 (define (draw-fern)
   (open-graphics)
   (let ((vp (open-viewport "Fractals - Bernley's Fern" *WIDTH* *HEIGHT*)))
