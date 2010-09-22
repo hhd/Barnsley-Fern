@@ -50,19 +50,20 @@
       input
       (choose-function (+ row 1) remaining))))
 
-(define (find-x x y input)
+; Finds a point to draw the next pixel given the correct
+; matrix value references.
+(define (find-point x y va vb vc input)
   (+ (* (+ (* x
               (mval #\a input))
            y)
         (mval #\b input))
      (mval #\e input)))
 
+(define (find-x x y input)
+  (find-point x y #\a #\b #\e input))
+
 (define (find-y x y input)
-  (+ (* (+ (* x
-              (mval #\c input))
-           y)
-        (mval #\d input))
-     (mval #\f input)))
+  (find-point x y #\c #\d #\f input))
 
 ; Draws the next point on the canvas using x,y as the
 ; seed and i as the iteration.
