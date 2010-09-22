@@ -16,10 +16,15 @@
 ; Colours to represent each function with.
 (define *COLOURS* '("green" "green" "green" "green"))
 
-; Number of iterations required to draw the fractal
 (define *ITERATIONS* 100)
+(define *WIDTH* 350)
+(define *HEIGHT* 350)
 
-; Matrix values for each function.
+; Valid ranges for the plottable points.
+(define *RANGE_X* '(-2.1818 2.6556))
+(define *RANGE_Y* '(0 9.95851))
+
+; Matrix constants for each function.
 ; Formula:
 ;   f(x,y) = [a b][x] + [e]
 ;            [c d][y]   [f]
@@ -65,16 +70,22 @@
 (define (find-y x y input)
   (find-point x y #\c #\d #\f input))
 
-; Draws the next point on the canvas using x,y as the
+; Calculates a pixel position and draws a point on it.
+(define (draw-pixel x y)
+  (let ((pixel-x (* (/ (- x (car *RANGE_X*)) (- (cadr *RANGE_X*) (car *RANGE_X*))) *WIDTH*))
+        (pixel-y (- (- *HEIGHT* 1) (* (/ (- y (car *RANGE_Y*)) (- (cadr *RANGE_Y*) (car *RANGE_Y*))) *HEIGHT*))))
+    (display pixel-x)
+    (display ", ")
+    (display pixel-y)
+    (display #\newline)))
+
+; Plots the next point on the canvas using x,y as the
 ; seed and i as the iteration.
 (define (plot-points i x y)
   (let* ((input (choose-function 0 (random)))
          (next-x (find-x x y input))
          (next-y (find-y x y input)))
-    (display next-x)
-    (display ",")
-    (display next-y)
-    (display "  |  ")
+    (draw-pixel next-x next-y)
     (if (< i *ITERATIONS*)
       (plot-points (+ i 1) next-x next-y))))
 
