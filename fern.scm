@@ -14,7 +14,10 @@
 (require (lib "graphics.ss" "graphics"))
 
 ; Colours to represent each function with.
-(define colours '("green" "green" "green" "green"))
+(define *COLOURS* '("green" "green" "green" "green"))
+
+; Number of iterations required to draw the fractal
+(define *ITERATIONS* 100)
 
 ; Matrix values for each function.
 ; Formula:
@@ -32,9 +35,9 @@
 ; Returns a given value from a row of the matrix
 ; as fed in through 'input'.
 (define (mval chr input)
-  (let (ref '((#\a 0) (#\b 1) (#\c 1)
-              (#\d 1) (#\e 1) (#\f 1)
-              (#\p 1)))
+  (let ((ref '((#\a 0) (#\b 1) (#\c 2)
+              (#\d 3) (#\e 4) (#\f 5)
+              (#\p 6))))
     (vector-ref input
                 (cadr (assoc chr ref)))))
 
@@ -42,30 +45,37 @@
 ; with non-uniform probability (given by p in the matrix).
 (define (choose-function row rnd)
   (let* ((input (list-ref matrix row))
-         (remaining (- (mval #\p input) rnd)))
+         (remaining (- rnd (mval #\p input))))
     (if (<= remaining 0)
       input
       (choose-function (+ row 1) remaining))))
 
 (define (find-x x y input)
   (+ (* (+ (* x
-           (mval #\a input)) y)
+              (mval #\a input))
+           y)
         (mval #\b input))
      (mval #\e input)))
 
 (define (find-y x y input)
   (+ (* (+ (* x
-           (mval #\c input)) y)
+              (mval #\c input))
+           y)
         (mval #\d input))
      (mval #\f input)))
 
 ; Draws the next point on the canvas using x,y as the
 ; seed and i as the iteration.
-(define (draw-point i x y)
+(define (plot-points i x y)
   (let* ((input (choose-function 0 (random)))
          (next-x (find-x x y input))
          (next-y (find-y x y input)))
     (display next-x)
+    (display ",")
     (display next-y)
-    (if (< i 100)
-      (draw-point (+ i 1) next-x next-y))))
+    (display "  |  ")
+    (if (< i *ITERATIONS*)
+      (plot-points (+ i 1) next-x next-y))))
+
+(define (draw-fern)
+  (plot-points 0 1 1))
