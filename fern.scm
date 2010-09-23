@@ -23,17 +23,22 @@
 
 ; Matrix constants for each function as found at:
 ;   http://en.wikipedia.org/wiki/Barnsley_fern.
-; Formula:
-;   f(x,y) = [a b][x] + [e]
-;            [c d][y]   [f]
 ;
-; Format (where 'p' is the propability factor): 
-;   (a b c d e f p)
+; Format (where 'p' is the probability factor and 'g' the colour):
+;   (a b c d e f p g)
 (define matrix
   '(#(0 0 0 0.16 0 0 0.01 "green")
     #(0.85 0.04 -0.04 0.85 0 1.6 0.85 "green")
     #(0.2 -0.26 0.23 0.22 0 1.6 0.08 "green")
     #(-0.15 0.28 0.26 0.24 0 0.44 0.06 "green")))
+
+; Or try the following matrix to generate the "Fishbone fern" as
+; described here: http://www.home.aone.net.au/~byzantium/ferns/fractal.html
+;(define matrix
+;  '(#(0 0 0 0.25 0 -0.4 0.02 "green")
+;    #(0.95 0.002 -0.002 0.93 -0.002 0.5 0.84 "green")
+;    #(0.035 -0.11 0.27 0.01 -0.05 0.005 0.07 "green")
+;    #(-0.04 0.11 0.27 0.01 0.047 0.06 0.07 "green")))
 
 ; Returns a given value from a row of the matrix
 ; as fed in through 'input'.

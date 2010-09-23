@@ -23,4 +23,3 @@ Change the WIDTH, HEIGHT and ITERATIONS values to suit.
 
 TODO
   - Allow for gradients in the image (is that even possible?)
-  - Add constants for generating different types of fern
