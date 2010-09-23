@@ -10,9 +10,6 @@
 ;;;
 ;;; Usage:
 ;;;   (make-fern)
-;;;
-;;; TODO:
-;;;   - Add ability to change colours for each of the four functions.
 
 (require (lib "graphics.ss" "graphics"))
 
@@ -33,17 +30,17 @@
 ; Format (where 'p' is the propability factor): 
 ;   (a b c d e f p)
 (define matrix
-  '(#(0 0 0 0.16 0 0 0.01)
-    #(0.85 0.04 -0.04 0.85 0 1.6 0.85)
-    #(0.2 -0.26 0.23 0.22 0 1.6 0.08)
-    #(-0.15 0.28 0.26 0.24 0 0.44 0.06)))
+  '(#(0 0 0 0.16 0 0 0.01 "green")
+    #(0.85 0.04 -0.04 0.85 0 1.6 0.85 "green")
+    #(0.2 -0.26 0.23 0.22 0 1.6 0.08 "green")
+    #(-0.15 0.28 0.26 0.24 0 0.44 0.06 "green")))
 
 ; Returns a given value from a row of the matrix
 ; as fed in through 'input'.
 (define (mval chr input)
   (let ((ref '((#\a 0) (#\b 1) (#\c 2)
               (#\d 3) (#\e 4) (#\f 5)
-              (#\p 6))))
+              (#\p 6) (#\g 7))))
     (vector-ref input
                 (cadr (assoc chr ref)))))
 
@@ -80,7 +77,7 @@
 ; We are only interested in this functions side-effects.
 ; NOTE: I got some help from http://vb-helper.com for
 ;       the pixel-x/pixel-y formulas.
-(define (paint-pixel vp x y)
+(define (paint-pixel vp x y color)
   (let* ((pixel-x (* (/ (- x range-min-w)
                         range-w)
                      *WIDTH*))
@@ -91,7 +88,7 @@
     ; Draw the pixel if it's in range.
     (if (and (>= pixel-x 0) (>= pixel-y 0)
              (< pixel-x *WIDTH*) (< pixel-y *HEIGHT*))
-      ((draw-pixel vp) posn "green"))))
+      ((draw-pixel vp) posn color))))
 
 ; Plots the next point on the canvas using x,y as the
 ; seed and i as the iteration.
@@ -99,7 +96,7 @@
   (let* ((input (choose-function 0 (random)))
          (next-x (find-x x y input))
          (next-y (find-y x y input)))
-    (paint-pixel vp next-x next-y)
+    (paint-pixel vp next-x next-y (mval #\g input))
     (if (< i *ITERATIONS*)
       (plot-points vp (+ i 1) next-x next-y))))
 

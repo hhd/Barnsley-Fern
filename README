@@ -22,5 +22,5 @@ Change the WIDTH, HEIGHT and ITERATIONS values to suit.
 
 
 TODO
-  - Add ability to generate different colours for each function (row of matrix)
+  - Allow for gradients in the image (is that even possible?)
   - Add constants for generating different types of fern
